@@ -1,0 +1,42 @@
+schema: orca.image-manifest/v1
+slug: replace-me
+application:
+  display_name: Replace Me
+  category: Demo
+  description: Template for a new ORCA application image. Replace every placeholder.
+  version: "0.1.0"
+base_os:
+  distribution: ubuntu
+  release: "24.04"
+architecture: x86_64
+instance_type: container
+minimum_resources:
+  cpu: 1
+  memory_mib: 512
+  storage_gib: 8
+network:
+  default_policy: private
+exposer:
+  enabled: true
+  endpoints:
+    - name: web
+      protocol: http
+      target_port: 8080
+      default_public: false
+      tls: automatic
+persistent_paths:
+  - path: /var/lib/replace-me
+upstream:
+  source_url: https://github.com/example/replace-me
+  homepage: https://example.com/
+  version_url: https://api.github.com/repos/example/replace-me/releases/latest
+  version_strategy: github-releases
+branding:
+  local_path: assets/logo.png
+  logo_source_url: https://example.com/logo.png
+build:
+  ready: false
+  recipe: recipes/build.sh
+  acceptance_test: recipes/acceptance.sh
+publication:
+  state: unpublished
