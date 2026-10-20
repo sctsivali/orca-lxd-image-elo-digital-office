@@ -1,36 +1,96 @@
-# ORCA LXD image template
+# ELO Digital Office
 
-GitHub template for one ORCA application image.
+Unpublished ORCA application image source for ELO 25 Server Setup.
 
-This repository starts **unpublished**. Replace the placeholders, run tests, then open a pull request. Green CI is not a published image.
+This repository starts **unpublished**. Green CI is source-ready only. It is
+not a published catalog image, not a lab snapshot, and not a finished
+document Web Client.
 
-## Quick start
+Follow the public contributor guide:
+https://github.com/sctsivali/orca-image-contributor-guide
 
-1. Use this repository as a GitHub template
-2. Edit `manifest.yaml`
-3. Replace `assets/logo.png` with the official logo
-4. Implement `recipes/build.sh` and `recipes/acceptance.sh`
-5. Run `make validate` and `make test`
-6. Open a pull request
+## Application
 
-Do not set `publication.state: published`.
+ELO Digital Office is a proprietary ECM. Each customer uses a different
+vendor license. This source therefore stops at **Server Setup**:
 
-## Application metadata
+- Ubuntu 24.04 virtual machine
+- local PostgreSQL on the guest loopback
+- vendor Server Setup media staged by the operator
+- wizard listener on guest port `7458`
+- no baked `.pk` license, master password, archive admin password, or
+  machine identity
 
-Replace slug, display name, version, official upstream URL, and minimum resources in `manifest.yaml`.
+Tenants finish the wizard themselves and apply **their own** license later.
+Do not copy a lab VM that already contains a not-for-resale entitlement.
 
 ## OrcaHub Exposer endpoints
 
-Declare every user-facing port. Database and admin ports stay non-public. Network default is private.
+Network default is **private**. Declared HTTP ports:
+
+| Name | Port | Default public | Role |
+|---|---|---|---|
+| `setup` | 7458 | no | Server Setup wizard |
+| `apps` | 9090 | no | Index Server / later application Tomcat |
+| `admin-console` | 9080 | no | Administration Console |
+
+PostgreSQL (`5432`) and search (`9200`) stay undeclared and non-public.
+
+Public Exposer ingress, if a maintainer later enables it, does not make the
+instance itself public.
 
 ## Build lifecycle
 
-Keep `build.ready: false` until recipes and tests are honest. Static validation does not publish the image.
+`build.ready` is **false**. The vendor installer is not a public GitHub
+release, so this repository cannot fetch it deterministically.
+
+Required static checks:
+
+```bash
+python3 -m pip install -r requirements-dev.txt
+make validate
+make test
+```
+
+Live LXD qualification: **not run**. Shared Sivali lab capacity is
+maintainer-only.
+
+Intended later maintainer build (not publication):
+
+1. Mount operator-supplied ELO 25 Server Setup media read-only.
+2. Install PostgreSQL on guest loopback only.
+3. Copy installer bytes into guest-owned storage and hash the entrypoint.
+4. Start Server Setup on loopback `7458`.
+5. Stop before license apply, `rest/apply`, and Web Client deployment.
+6. Generate first-boot credentials. Never bake secrets.
+
+## How to use after a future published release
+
+Use the immutable alias from the verified release catalog. Do not treat any
+internal candidate alias as downloadable today.
+
+1. Launch the VM on a private network with the persistent paths attached.
+2. Open the `setup` endpoint path `/` only after a local HTTP readiness check
+   on port `7458`. Bare `/` may return 404; use the current Server Setup
+   session URL from installer logs on the operator machine.
+3. Unlock Server Setup with a first-boot password, not a baked lab password.
+4. Apply the tenant license file. Do not reuse another tenant's `.pk`.
+5. Add Web Client in Applications only after the tenant archive exists.
+
+## Persistence
+
+- `/opt/elo` — vendor program and archive
+- `/var/lib/postgresql` — database
+- `/var/lib/elo-setup` — installer state (no secrets in Git)
+
+## License and branding
+
+Source license is Apache-2.0. ELO itself remains proprietary vendor software.
+`assets/logo.png` is the template placeholder until an official logo file can
+be retrieved over HTTPS without a blocked vendor homepage.
 
 ## Agent instructions
 
 Read `AGENTS.md`. You do not need Atlas-ORCA.
 
-## License
-
-Apache License 2.0.
+Keep `publication.state: unpublished`.

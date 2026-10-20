@@ -1,39 +1,55 @@
 schema: orca.image-manifest/v1
-slug: replace-me
+slug: elo-digital-office
 application:
-  display_name: Replace Me
-  category: Demo
-  description: Template for a new ORCA application image. Replace every placeholder.
-  version: "0.1.0"
+  display_name: ELO Digital Office
+  category: Document Management
+  description: >-
+    Ubuntu virtual machine that stages ELO 25 Server Setup and local PostgreSQL
+    so each tenant can finish the vendor wizard with their own license. This
+    source stops before license apply, archive apply, and Web Client install.
+    It is not a snapshot of a lab VM.
+  version: "25.0"
 base_os:
   distribution: ubuntu
   release: "24.04"
 architecture: x86_64
-instance_type: container
+instance_type: virtual-machine
 minimum_resources:
-  cpu: 1
-  memory_mib: 512
-  storage_gib: 8
+  cpu: 4
+  memory_mib: 8192
+  storage_gib: 40
 network:
   default_policy: private
 exposer:
   enabled: true
   endpoints:
-    - name: web
+    - name: setup
       protocol: http
-      target_port: 8080
+      target_port: 7458
+      default_public: false
+      tls: automatic
+    - name: apps
+      protocol: http
+      target_port: 9090
+      default_public: false
+      tls: automatic
+    - name: admin-console
+      protocol: http
+      target_port: 9080
       default_public: false
       tls: automatic
 persistent_paths:
-  - path: /var/lib/replace-me
+  - path: /opt/elo
+  - path: /var/lib/postgresql
+  - path: /var/lib/elo-setup
 upstream:
-  source_url: https://github.com/example/replace-me
-  homepage: https://example.com/
-  version_url: https://api.github.com/repos/example/replace-me/releases/latest
-  version_strategy: github-releases
+  source_url: https://docs.elo.com/en-us/elo-help/
+  homepage: https://docs.elo.com/en-us/elo-help/
+  version_url: https://docs.elo.com/25-lts/en-us/
+  version_strategy: vendor-docs
 branding:
   local_path: assets/logo.png
-  logo_source_url: https://example.com/logo.png
+  logo_source_url: https://docs.elo.com/en-us/elo-help/
 build:
   ready: false
   recipe: recipes/build.sh
