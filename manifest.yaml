@@ -55,4 +55,4 @@ build:
   recipe: recipes/build.sh
   acceptance_test: recipes/acceptance.sh
 publication:
-  state: unpublished
+  state: qualification-pending

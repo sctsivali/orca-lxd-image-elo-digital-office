@@ -2,9 +2,10 @@
 
 Unpublished ORCA application image source for ELO 25 Server Setup.
 
-This repository starts **unpublished**. Green CI is source-ready only. It is
-not a published catalog image, not a lab snapshot, and not a finished
-document Web Client.
+This repository starts **unpublished**. Green CI is source-ready only.
+Maintainer live qualification on a disposable Ubuntu VM is
+**qualification-pending**. It is not a published catalog image, not a lab snapshot,
+and not a finished document Web Client.
 
 Follow the public contributor guide:
 https://github.com/sctsivali/orca-image-contributor-guide
@@ -52,8 +53,11 @@ make validate
 make test
 ```
 
-Live LXD qualification: **not run**. Shared Sivali lab capacity is
-maintainer-only.
+Live LXD qualification: **passed** on a disposable maintainer VM
+(20 Oct 2026). The candidate is not on `images.orca.id` and is not
+listed on `inventory.orca.id`. Shared Sivali lab capacity is
+maintainer-only. Do not treat any internal candidate alias as
+downloadable.
 
 Intended later maintainer build (not publication):
 

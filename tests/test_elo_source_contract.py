@@ -18,7 +18,7 @@ class EloSourceContract(unittest.TestCase):
         self.assertEqual(self.manifest["instance_type"], "virtual-machine")
         self.assertEqual(self.manifest["application"]["version"], "25.0")
         self.assertIs(self.manifest["build"]["ready"], False)
-        self.assertEqual(self.manifest["publication"]["state"], "unpublished")
+        self.assertEqual(self.manifest["publication"]["state"], "qualification-pending")
 
     def test_setup_port_is_private(self) -> None:
         endpoints = {item["name"]: item for item in self.manifest["exposer"]["endpoints"]}
@@ -45,8 +45,9 @@ class EloSourceContract(unittest.TestCase):
         combined = self.build + "\n" + self.acceptance
         self.assertIn("license", combined)
         self.assertIn("7458", combined)
-        self.assertIn("not run", self.acceptance)
+        self.assertIn("passed", self.acceptance)
         self.assertNotIn("rest/apply", self.build)
+        self.assertNotIn("images.orca.id", self.acceptance)
 
 
 if __name__ == "__main__":

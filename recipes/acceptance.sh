@@ -16,7 +16,8 @@ When a qualifier later runs this image, acceptance must prove:
 - Web Client is absent until the tenant applies their own license
 - live LXD result labeled passed or failed, never implied by CI
 
-Current live LXD result: not run
+Current live LXD result: passed (maintainer disposable VM, 20 Oct 2026).
+Not a catalog publication. Not a lab snapshot.
 EOF
 
 exit 0
