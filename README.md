@@ -90,8 +90,8 @@ internal candidate alias as downloadable today.
 ## License and branding
 
 Source license is Apache-2.0. ELO itself remains proprietary vendor software.
-`assets/logo.png` is the template placeholder until an official logo file can
-be retrieved over HTTPS without a blocked vendor homepage.
+`assets/logo.png` is a raster of the official ELO wordmark from
+https://www.elo.com/typo3conf/ext/nelo_elocom_templates/Resources/Public/Images/logo_elo.svg.
 
 ## Agent instructions
 

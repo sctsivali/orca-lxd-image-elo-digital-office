@@ -49,7 +49,7 @@ upstream:
   version_strategy: vendor-docs
 branding:
   local_path: assets/logo.png
-  logo_source_url: https://docs.elo.com/en-us/elo-help/
+  logo_source_url: https://www.elo.com/typo3conf/ext/nelo_elocom_templates/Resources/Public/Images/logo_elo.svg
 build:
   ready: false
   recipe: recipes/build.sh

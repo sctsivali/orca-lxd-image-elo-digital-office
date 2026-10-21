@@ -49,6 +49,20 @@ class EloSourceContract(unittest.TestCase):
         self.assertNotIn("rest/apply", self.build)
         self.assertNotIn("images.orca.id", self.acceptance)
 
+    def test_logo_is_official_elo_raster_not_template_placeholder(self) -> None:
+        logo = ROOT / self.manifest["branding"]["local_path"]
+        data = logo.read_bytes()
+        self.assertTrue(data.startswith(b"\x89PNG\r\n\x1a\n"))
+        self.assertGreater(len(data), 1024)
+        self.assertNotEqual(
+            __import__("hashlib").sha256(data).hexdigest(),
+            "a0e6376723612af36978d455ed7ae9eb54e3c358d81d7b8dc8e51e4bfb5fd28f",
+        )
+        self.assertEqual(
+            self.manifest["branding"]["logo_source_url"],
+            "https://www.elo.com/typo3conf/ext/nelo_elocom_templates/Resources/Public/Images/logo_elo.svg",
+        )
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
