@@ -20,13 +20,20 @@ class EloSourceContract(unittest.TestCase):
         self.assertIs(self.manifest["build"]["ready"], False)
         self.assertEqual(self.manifest["publication"]["state"], "qualification-pending")
 
-    def test_setup_port_is_private(self) -> None:
+    def test_root_disk_matches_qcow2_virtual_size_80_gib(self) -> None:
+        self.assertEqual(self.manifest["minimum_resources"]["storage_gib"], 80)
+        self.assertIn("80 gib", self.readme)
+
+    def test_setup_port_is_private_loopback_only(self) -> None:
         endpoints = {item["name"]: item for item in self.manifest["exposer"]["endpoints"]}
-        self.assertIn("setup", endpoints)
+        self.assertEqual(set(endpoints), {"setup"})
         self.assertEqual(endpoints["setup"]["target_port"], 7458)
         self.assertIs(endpoints["setup"]["default_public"], False)
-        for item in self.manifest["exposer"]["endpoints"]:
-            self.assertIs(item["default_public"], False)
+        self.assertIn("127.0.0.1:7458", self.readme)
+        self.assertIn("do not bind", self.readme)
+        self.assertIn("0.0.0.0", self.readme)
+        self.assertNotIn("9090", self.readme)
+        self.assertNotIn("9080", self.readme)
 
     def test_database_port_is_not_an_exposer_endpoint(self) -> None:
         ports = {item["target_port"] for item in self.manifest["exposer"]["endpoints"]}

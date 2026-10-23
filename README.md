@@ -18,7 +18,8 @@ vendor license. This source therefore stops at **Server Setup**:
 - Ubuntu 24.04 virtual machine
 - local PostgreSQL on the guest loopback
 - vendor Server Setup media staged by the operator
-- wizard listener on guest port `7458`
+- 80 GiB root disk (QCOW2 virtual size; do not launch at 40 GiB)
+- wizard listener on guest `127.0.0.1:7458` only; do not bind `0.0.0.0`
 - no baked `.pk` license, master password, archive admin password, or
   machine identity
 
@@ -27,15 +28,22 @@ Do not copy a lab VM that already contains a not-for-resale entitlement.
 
 ## OrcaHub Exposer endpoints
 
-Network default is **private**. Declared HTTP ports:
+Network default is **private**. This Server Setup-only image declares **one**
+HTTP port:
 
 | Name | Port | Default public | Role |
 |---|---|---|---|
-| `setup` | 7458 | no | Server Setup wizard |
-| `apps` | 9090 | no | Index Server / later application Tomcat |
-| `admin-console` | 9080 | no | Administration Console |
+| `setup` | 7458 | no | Server Setup wizard on `127.0.0.1` |
+
+Later application and administration consoles are not declared here. They are
+not listening until the tenant finishes Server Setup. Do not auto-publish them
+from OrcaHub checkout.
 
 PostgreSQL (`5432`) and search (`9200`) stay undeclared and non-public.
+
+Reach the wizard with a host-loopback LXD proxy plus SSH forward, or a
+first-boot helper **after** tenant unlock. Do not bind the wizard to `0.0.0.0`
+to make Expose Services green.
 
 Public Exposer ingress, if a maintainer later enables it, does not make the
 instance itself public.
@@ -73,10 +81,13 @@ Intended later maintainer build (not publication):
 Use the immutable alias from the verified release catalog. Do not treat any
 internal candidate alias as downloadable today.
 
-1. Launch the VM on a private network with the persistent paths attached.
+1. Launch the VM on a private network with an 80 GiB root disk and the
+   persistent paths attached. A 40 GiB volume is smaller than the image
+   virtual size and LXD will refuse it.
 2. Open the `setup` endpoint path `/` only after a local HTTP readiness check
-   on port `7458`. Bare `/` may return 404; use the current Server Setup
-   session URL from installer logs on the operator machine.
+   on `127.0.0.1:7458`. Bare `/` may return 404; use the current Server Setup
+   session URL from installer logs on the operator machine. Do not bind
+   that listener to `0.0.0.0`.
 3. Unlock Server Setup with a first-boot password, not a baked lab password.
 4. Apply the tenant license file. Do not reuse another tenant's `.pk`.
 5. Add Web Client in Applications only after the tenant archive exists.

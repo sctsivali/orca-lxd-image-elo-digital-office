@@ -17,7 +17,7 @@ instance_type: virtual-machine
 minimum_resources:
   cpu: 4
   memory_mib: 8192
-  storage_gib: 40
+  storage_gib: 80
 network:
   default_policy: private
 exposer:
@@ -26,16 +26,6 @@ exposer:
     - name: setup
       protocol: http
       target_port: 7458
-      default_public: false
-      tls: automatic
-    - name: apps
-      protocol: http
-      target_port: 9090
-      default_public: false
-      tls: automatic
-    - name: admin-console
-      protocol: http
-      target_port: 9080
       default_public: false
       tls: automatic
 persistent_paths:
